@@ -1,12 +1,12 @@
 #include <WiFi.h>
-#include <HardwareSerial.h>
+// #include <HardwareSerial.h>
 #include <SoftwareSerial.h>
 #include <esp_wifi.h>
 
-// const char* ssid = "JIG-MOLD";
-// const char* password = "12345678901234567890123456";
-const char* ssid = "AGF_Canon_1";
-const char* password = "MKAC12345";
+const char* ssid = "JIG-MOLD";
+const char* password = "12345678901234567890123456";
+// const char* ssid = "AGF_Canon_1";
+// const char* password = "MKAC12345";
 const char* espHostname = "MKAC-AGF";
 
 // Static IP configuration
@@ -44,8 +44,8 @@ unsigned char data2[11] = { 0 };
 // const int sensorPin1 = 37;
 // const int sensorPin2 = 38;
 
-const int led_stop = 6;           // Đèn đỏ, báo băng tải hoạt động với AGF
-const int led_start = 7;          // Đèn xanh, báo băng tải hoạt động chế độ thường
+const int led_stop = 7;           // Đèn đỏ, báo băng tải hoạt động với AGF
+const int led_start = 6;          // Đèn xanh, báo băng tải hoạt động chế độ thường
 const int request_agf_mode = 15;  // yêu cầu chuyển băng tải sang chế độ hoạt động với AGF
 
 
@@ -56,8 +56,8 @@ const int out1 = 16;  // yêu cầu chuyển băng tải sang chế độ hoạt
 
 bool state_in1;
 bool state_in2;
-
-
+bool enable_AGF_controll;
+bool ready_conveyor; 
 
 String responseConveyor = "$1*";
 
@@ -258,7 +258,7 @@ void loop() {
   if (clientConnected) {
     if (client_.available()) {
       String request = client_.readStringUntil('/n');
-      Serial.println("request: ");
+      Serial.print("request: ");
       Serial.println(request);
       if (request.indexOf("stop") != -1 || request.indexOf("start") != -1) {
         if (ready_conveyor == 1) {
